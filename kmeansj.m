@@ -8,7 +8,7 @@ function m = kmeansj(dataset, k)
     [dimRows, dimCols] = size(dataset);
     
     % Create cluster centres (at random)
-    m = (rand(k, dimCols)*7);
+    m = (rand(k, dimCols)*8)-4;
     
     % Create some different colours for each cluster
     plotColours = abs(rand(k,3));
@@ -49,7 +49,7 @@ function m = kmeansj(dataset, k)
             plot(m(:,1), m(:,2), 'bo');
         end
         if(dimCols == 3)
-            plot(m(:,1), m(:,2), m(:,3), 'bo');
+            plot3(m(:,1), m(:,2), m(:,3), 'bo');
         end
         
         for i = 1:k

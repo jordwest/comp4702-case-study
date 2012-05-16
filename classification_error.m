@@ -1,43 +1,42 @@
+% COMP4702 Case Study
+% Semester 1, 2012
+%    Jordan West
+
+% A Novel Kernel Method for Clustering
+% Francesco Camastra, Member, IEEE, and
+%       Alessandro Verri
+
+% Utility for calculating classification error
+
 % Calculates classification error given a list of named classes (original data)
 % and a list of numbered classes (classification algo output)
 
-function [err, correct, incorrect] = classification_error(classnames, classnumbers)
+function instances = classification_error(classnames, clusternumbers)
+% Returns a matrix which indicates how two different naming schemes for
+% clusters could be interpreted as correct/incorrect instances. Can be used
+% for calculating classification error in clusters
+
     [dimRows, dimCols] = size(classnames);
     
     % NOTE: The behaviour of the 'unique' function may change in R2012a?
     % This code was only tested in R2011b
-    discoveredClasses = unique(classnames)
+    discoveredClasses = unique(classnames);
     
-    [classCount, x] = size(discoveredClasses);
+    discoveredClusters = unique(clusternumbers)
     
-    correct = 0;
-    incorrect = 0;
+    classCount = size(discoveredClasses, 1);
+    clusterCount = size(discoveredClusters, 1);
+    
+    instances = zeros(classCount, clusterCount);
     
     for class = 1:classCount
-        % Create a list of datapoints for this class only
-        A = classnames(strcmp(discoveredClasses(class), classnames) == 1, :)
-        B = classnumbers(strcmp(discoveredClasses(class), classnames) == 1, :)
-        
-        % Find the most common classification for this class
-        classno = mode(B)
-        
-        % Find the number of values that were correctly classified
-        correct = correct + sum(B == classno)
-        incorrect = incorrect + sum(B ~= classno)
+        for cluster = 1:clusterCount
+            % Find number of instances where the specified class and
+            % cluster are the same
+            A = strcmp(discoveredClasses(class), classnames) == 1;
+            B = clusternumbers == discoveredClusters(cluster);
+
+            instances(class, cluster) = sum(A == B == 1);
+        end
     end
-    
-    % Assign the named classes a number instead
-    
-%     for row = 1:dimRows
-%         for class = 1:classCount           
-%             scm = strcmp(discoveredClasses(class,1), classnames(row,1));
-%             if(scm == 1)
-%                 numberedClasses(row,1) = class;
-%             end
-%         end
-%         
-%         numberedClasses(row,2) = classnumbers(row);
-%     end
-    
-    err = correct / (correct+incorrect);
 end

@@ -19,6 +19,10 @@ D = [X.' Y.'];
 % Randomly sort the dataset
 D = D(randperm(size(D,1)),:);
 
+% Clear out values out of range (due to the randomness)
+D = D(D(:, 1) > 0, :);
+D = D(abs(D(:, 2)) < 1, :);
+
 hold off;
 plot(D(:,1), D(:,2), 'o');
 
